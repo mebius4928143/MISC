@@ -1,12 +1,12 @@
 Option Explicit
 '********************************************************
-' é›»è©±å¸³ã‚µãƒ³ãƒ—ãƒ«ã‚½ãƒ•ãƒˆ
+' “d˜b’ ƒTƒ“ƒvƒ‹ƒ\ƒtƒg
 '********************************************************
 Private DB As Database
 Private Const FILENAME = "c:\Database.mdb"
 
 '********************************************************
-' ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©
+' ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰
 '********************************************************
 Private Sub AddButton_Click()
     If (Not AddLogic()) Then Exit Sub
@@ -41,7 +41,7 @@ Private Sub DeleteButton_Click()
 End Sub
 
 '********************************************************
-' åå‰ã¨é›»è©±ç•ªå·ã®è¡¨ç¤ºã‚’ã‚¯ãƒªã‚¢ã—ã¾ã™
+' –¼‘O‚Æ“d˜b”Ô†‚Ì•\¦‚ğƒNƒŠƒA‚µ‚Ü‚·
 '********************************************************
 Private Sub ClearData()
     NameTextBox.Text = ""
@@ -49,8 +49,8 @@ Private Sub ClearData()
 End Sub
 
 '********************************************************
-' ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤º
-' ErrorNumber   ã‚¨ãƒ©ãƒ¼ç•ªå·
+' ƒGƒ‰[ƒƒbƒZ[ƒW•\¦
+' ErrorNumber   ƒGƒ‰[”Ô†
 '********************************************************
 Private Sub ShowErrorMessage(ByVal ErrorNumber As Long)
     Call MsgBox( _
@@ -58,9 +58,9 @@ Private Sub ShowErrorMessage(ByVal ErrorNumber As Long)
 End Sub
 
 '********************************************************
-' Code ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
-' Returns:  ç•ªå·
-' Remarks:  CodeTextBox.Text ã«å…¥åŠ›ã•ã‚Œã¦ã„ã‚‹å€¤ã§ã™
+' Code ƒvƒƒpƒeƒB
+' Returns:  ”Ô†
+' Remarks:  CodeTextBox.Text ‚É“ü—Í‚³‚ê‚Ä‚¢‚é’l‚Å‚·
 '********************************************************
 Private Property Get Code() As Long
     Code = Val(CodeTextBox.Text)
@@ -71,12 +71,12 @@ Private Property Let Code(ByVal Value As Long)
 End Property
 
 '********************************************************
-' è¿½åŠ å‡¦ç†ã‚’å®Ÿè¡Œã—ã¾ã™
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' ’Ç‰Áˆ—‚ğÀs‚µ‚Ü‚·
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function AddLogic() As Boolean
     If (InvalidCode(Code)) Then
-        Call MsgBox("è¿½åŠ ã§ãã¾ã›ã‚“ã§ã—ãŸ")
+        Call MsgBox("’Ç‰Á‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½")
         AddLogic = False
         Exit Function
     End If
@@ -87,12 +87,12 @@ Private Function AddLogic() As Boolean
 End Function
 
 '********************************************************
-' æ›´æ–°å‡¦ç†ã‚’å®Ÿè¡Œã—ã¾ã™
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' XVˆ—‚ğÀs‚µ‚Ü‚·
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function UpdateLogic() As Boolean
     If (InvalidCode(Code)) Then
-        Call MsgBox("æ›´æ–°ã«å¤±æ•—ã—ã¾ã—ãŸ")
+        Call MsgBox("XV‚É¸”s‚µ‚Ü‚µ‚½")
         UpdateLogic = False
         Exit Function
     End If
@@ -106,12 +106,12 @@ Private Function UpdateLogic() As Boolean
 End Function
 
 '********************************************************
-' å‰Šé™¤å‡¦ç†ã‚’å®Ÿè¡Œã—ã¾ã™
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' íœˆ—‚ğÀs‚µ‚Ü‚·
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function DeleteLogic() As Boolean
     If (InvalidCode(Code)) Then
-        Call MsgBox("å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ")
+        Call MsgBox("íœ‚É¸”s‚µ‚Ü‚µ‚½")
         DeleteLogic = False
         Exit Function
     End If
@@ -122,34 +122,34 @@ Private Function DeleteLogic() As Boolean
 End Function
 
 '********************************************************
-' èª­è¾¼ã¿å‡¦ç†ã‚’å®Ÿè¡Œã—ã¾ã™
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' “Ç‚İˆ—‚ğÀs‚µ‚Ü‚·
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function ReadLogic() As Boolean
     Dim RS As Recordset
     Set RS = ReadRecord(Code)
     If (RS Is Nothing) Then Exit Function
     If (RS.BOF And RS.EOF) Then
-        Call MsgBox("ç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“ã§ã—ãŸ")
+        Call MsgBox("“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ‚Å‚µ‚½")
         ReadLogic = False
     Else
-        NameTextBox.Text = RS("åå‰")
-        TelephoneNumberTextBox.Text = RS("é›»è©±ç•ªå·")
+        NameTextBox.Text = RS("–¼‘O")
+        TelephoneNumberTextBox.Text = RS("“d˜b”Ô†")
         ReadLogic = True
     End If
     Call RS.Close
 End Function
 
 '********************************************************
-' ç•ªå·å€¤ãŒæœ‰åŠ¹ã‹ã©ã†ã‹ã‚’æ¤œè¨¼ã—ãŸçµæœã‚’å–å¾—ã—ã¾ã™
-' Value:    ç•ªå·ã®å€¤
-' Returns:  çµæœ [True:ç„¡åŠ¹ / False:æœ‰åŠ¹]
+' ”Ô†’l‚ª—LŒø‚©‚Ç‚¤‚©‚ğŒŸØ‚µ‚½Œ‹‰Ê‚ğæ“¾‚µ‚Ü‚·
+' Value:    ”Ô†‚Ì’l
+' Returns:  Œ‹‰Ê [True:–³Œø / False:—LŒø]
 '********************************************************
 Private Function InvalidCode( _
     ByVal Value As Long) As Boolean
 
     If (Value <= 0 Or Value >= 100000000) Then
-        Call MsgBox("ç•ªå·ã®å€¤ãŒä¸æ­£ã§ã™")
+        Call MsgBox("”Ô†‚Ì’l‚ª•s³‚Å‚·")
         InvalidCode = True
     Else
         InvalidCode = False
@@ -157,9 +157,9 @@ Private Function InvalidCode( _
 End Function
 
 '********************************************************
-' ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’è¿½åŠ ã—ã¾ã™
-' Code:  ç•ªå·
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' ƒŒƒR[ƒh‚ğ’Ç‰Á‚µ‚Ü‚·
+' Code:  ”Ô†
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function AddRecord(ByVal Code As Long) As Boolean
     Dim SqlText As String
@@ -168,11 +168,11 @@ Private Function AddRecord(ByVal Code As Long) As Boolean
 End Function
 
 '********************************************************
-' ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’æ›´æ–°ã—ã¾ã™
-' Code:          ç•ªå·
-' NameValue      åå‰
-' TelephoneNumber   é›»è©±ç•ªå·
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' ƒŒƒR[ƒh‚ğXV‚µ‚Ü‚·
+' Code:          ”Ô†
+' NameValue      –¼‘O
+' TelephoneNumber   “d˜b”Ô†
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function UpdateRecord( _
     ByVal Code As Long, _
@@ -186,9 +186,9 @@ Private Function UpdateRecord( _
 End Function
 
 '********************************************************
-' ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’å‰Šé™¤ã—ã¾ã™
-' Code:  ç•ªå·
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' ƒŒƒR[ƒh‚ğíœ‚µ‚Ü‚·
+' Code:  ”Ô†
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function DeleteRecord(ByVal Code As Long) As Boolean
     Dim SqlText As String
@@ -197,9 +197,9 @@ Private Function DeleteRecord(ByVal Code As Long) As Boolean
 End Function
 
 '********************************************************
-' ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’èª­ã¿è¾¼ã¿ã¾ã™
-' Code:  ç•ªå·
-' Returns:  RecordSet ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+' ƒŒƒR[ƒh‚ğ“Ç‚İ‚İ‚Ü‚·
+' Code:  ”Ô†
+' Returns:  RecordSet ƒIƒuƒWƒFƒNƒg
 '********************************************************
 Private Function ReadRecord( _
     ByVal Code As Long) As Recordset
@@ -221,23 +221,23 @@ Private Function ReadRecord( _
 End Function
 
 '********************************************************
-' å„ SQL æ–‡å­—åˆ—ã‚’å–å¾—ã—ã¾ã™
-' Code:  ç•ªå·
-' Returns:  SQL æ–‡å­—åˆ—
+' Še SQL •¶š—ñ‚ğæ“¾‚µ‚Ü‚·
+' Code:  ”Ô†
+' Returns:  SQL •¶š—ñ
 '********************************************************
 Private Function GetSelectSqlText( _
     ByVal Code As Long) As String
 
     GetSelectSqlText = _
         "SELECT * FROM MyTable " & _
-        "WHERE ç•ªå· = " & CStr(Code)
+        "WHERE ”Ô† = " & CStr(Code)
 End Function
 
 Private Function GetAddSqlText( _
     ByVal Code As Long) As String
 
     GetAddSqlText = _
-        "INSERT INTO MyTable(ç•ªå·, åå‰, é›»è©±ç•ªå·) " & _
+        "INSERT INTO MyTable(”Ô†, –¼‘O, “d˜b”Ô†) " & _
         "VALUES(" & CStr(Code) & ", '' , '')"
 End Function
 
@@ -249,9 +249,9 @@ Private Function GetUpdateSqlText( _
     GetUpdateSqlText = _
         "UPDATE MyTable " & _
         "Set " & _
-            "åå‰ = '" & NameValue & "', " & _
-            "é›»è©±ç•ªå· = '" & TelephoneNumber & "' " & _
-        "WHERE ç•ªå· = " & CStr(Code)
+            "–¼‘O = '" & NameValue & "', " & _
+            "“d˜b”Ô† = '" & TelephoneNumber & "' " & _
+        "WHERE ”Ô† = " & CStr(Code)
 End Function
 
 Private Function GetDeleteSqlText( _
@@ -259,13 +259,13 @@ Private Function GetDeleteSqlText( _
 
     GetDeleteSqlText = _
         "DELETE * FROM MyTable " & _
-        "WHERE ç•ªå· = " & CStr(Code)
+        "WHERE ”Ô† = " & CStr(Code)
 End Function
 
 '********************************************************
-' ã‚¯ã‚¨ãƒªãƒ¼ã‚’å®Ÿè¡Œã—ã¾ã™
-' SqlText:  å®Ÿè¡Œã—ãŸã„ SQL æ–‡å­—åˆ—
-' Returns:  çµæœ [True:æˆåŠŸ / False:å¤±æ•—]
+' ƒNƒGƒŠ[‚ğÀs‚µ‚Ü‚·
+' SqlText:  Às‚µ‚½‚¢ SQL •¶š—ñ
+' Returns:  Œ‹‰Ê [True:¬Œ÷ / False:¸”s]
 '********************************************************
 Private Function ExecuteQuery( _
     ByVal SqlText As String) As Boolean
@@ -283,7 +283,7 @@ Private Function ExecuteQuery( _
 End Function
 
 '********************************************************
-' ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã¸ã®æ¥ç¶šã‚’é–‹å§‹ã—ã¾ã™
+' ƒf[ƒ^ƒx[ƒX‚Ö‚ÌÚ‘±‚ğŠJn‚µ‚Ü‚·
 '********************************************************
 Private Sub ConnectDatabase()
     Set DB = _
@@ -291,7 +291,7 @@ Private Sub ConnectDatabase()
 End Sub
 
 '********************************************************
-' ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®æ¥ç¶šã‚’çµ‚äº†ã—ã¾ã™
+' ƒf[ƒ^ƒx[ƒX‚ÌÚ‘±‚ğI—¹‚µ‚Ü‚·
 '********************************************************
 Private Sub CloseDatabase()
     Call DB.Close

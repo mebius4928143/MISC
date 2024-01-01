@@ -1,0 +1,131 @@
+===HTML===
+<table class="imitationSelect" id="sel2">
+</table><table class="imitationSelect" id="sel2">
+</table>
+
+====CSS===
+/* table SELECTモドキ */
+table.imitationSelect, table.imitationPulldown {
+  table-layout: fixed;
+  border: 1px solid black;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #e8e8e8;
+  color: black;
+  line-height: 0px; /* これを入れないと、下に隙間が出来る場合がある */
+  cursor: pointer;
+}
+/* table (1行表示用) */
+table.imitationSelect {
+  position: relative;
+  overflow: visible;    /* プルダウンをハミ出させる(tableの規定値は hidden なので) */
+  z-index: 10;
+}
+/* table (プルダウン用) */
+table.imitationPulldown {
+  position: absolute;
+  z-index: 12;
+  left: -1px; top: -1px;  /* border サイズ分を引く */
+}
+
+/* tr (1行表示用) */
+table.imitationSelect tr {
+  height: 16px;   /* 画像.height + 2 (borderの分を足す) */
+  font-size: 11px;  /* 画像.height - 3 */
+}
+/* tr (プルダウン用) */
+table.imitationPulldown tr {
+  height: 30px; /* タップしやすいように広げる */
+  font-size: 13px;  /* 文字も大きく */
+}
+table.imitationPulldown tr:nth-child(2n) {
+  background: #d8d8d8;  /* 偶数行の背景色 */
+}
+table.imitationPulldown tr:hover {
+  background: #808080;  /* hover時 */
+  color: white;
+}
+
+/* td (共通) */
+table.imitationSelect td, table.imitationPulldown td {
+  vertical-align: middle; /* 縦方向 中央寄せ */
+}
+td.imitationImage {
+  width: 32px;      /* 使われる複数 image の中の最大幅 +α */
+  text-align: center; /* 画像は中央 */
+}
+td.imitationText {
+  text-align: left;   /* 文字は左寄せ */
+}
+
+====JS===
+/*"use strict";*/
+/** SELECTモドキ コンストラクタ
+* @arg  ImitationId Selectモドキの select id
+* @arg  arr 選択肢内容 Array
+*/
+function ImitationSelect(ImitationId, arr) {
+    var _this = this;
+    this.table = document.getElementById(ImitationId);
+    this.arr = arr;
+    this.selectId = 0; // 選択されている行(プルダウンで選んだ値)
+    this.tr1 = this.table.insertRow(-1); // 1行表示用 tr (createElement & appendChild)
+    // プルダウンを予め作っておく(safariでの pulldownClose対策)
+    var pullDown = document.createElement('table');
+    pullDown.className = 'imitationPulldown';
+    this.pullDown = pullDown;
+    for (var i = 0; i < this.arr.length; i++) {
+        var tr = _this.pullDown.insertRow(-1);
+        /*tr.onclick = function(i) { _this.selectPD(i); }*/
+        tr.addEventListener('click', { handleEvent: _this.selectPD, obj: _this, idx: i }, false);
+        tr.innerHTML = this.td(i);
+    }
+    pullDown.style.visibility = "hidden"; // 消しておく
+    this.table.appendChild(pullDown);
+    document.body.addEventListener('click', function (e) {
+        if (!e.target.closest('#' + ImitationId)) { // ImitationIdで無ければ
+            _this.pulldownClose(); // プルダウンを閉じる
+        }
+    });
+}
+/* 1行分の表示を得る(trは含まない) */
+ImitationSelect.prototype.td = function (idx) {
+    if (idx >= this.arr.length) {
+        console.log("out of index [" + idx + "]");
+        return "";
+    }
+    return "<td class='imitationImage'><img src='" + this.arr[idx]['img']
+        + "'></td>";
+};
+/* SELECTモドキの表示(選択した行だけを表示) */
+ImitationSelect.prototype.disp = function () {
+    var _this = this; // ImitationSelect オブジェクト
+    this.tr1.innerHTML = this.td(this.selectId) + "<td>&ensp;🔽</td>";
+    this.tr1.onclick = function () { _this.pulldownOpen(); }; // クリックされたとき
+};
+/* SELECTモドキをクリックしてプルダウンを開く */
+ImitationSelect.prototype.pulldownOpen = function () {
+    this.tr1.onclick = function () { }; // 1行表示用 tr の onclick を消す
+    this.pullDown.style.visibility = "visible"; // プルダウン表示
+};
+/* プルダウンを閉じる */
+ImitationSelect.prototype.pulldownClose = function () {
+    this.pullDown.style.visibility = "hidden";
+    this.disp();
+};
+/* プルダウンの中身をクリックした時 */
+ImitationSelect.prototype.selectPD = function (e) {
+    var imSel = this.obj; // 元の ImitationSelect オブジェクト
+    imSel.selectId = this.idx; // 選んだ番号
+    imSel.pulldownClose(); // プルダウン閉じて元のtr1表示
+};
+/* 実行部 */
+var languages = new Array(
+{ txt: '日本語', img: 'http://mermaiddays.com/pc/img/jp.png' },
+{ txt: 'English', img: 'http://mermaiddays.com/pc/img/en.png' },
+{ txt: 'Tailand', img: 'http://mermaiddays.com/pc/img/th.png' });
+// 定義と表示
+var sel2 = new ImitationSelect("sel2", languages);
+sel2.disp();

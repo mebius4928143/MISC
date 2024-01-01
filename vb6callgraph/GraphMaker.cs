@@ -11,7 +11,7 @@ namespace vb6callgraph
     public class GraphMaker
     {
         public string CommentOut = @"(^[\s]*('.*)$)|(^[^""']*(""[^""]*(("""")[^""]*)*""[^""']*)*('.*)$)";
-        public string StringLiteral = @"""(""""|[^""]+)*";
+        public string StringLiteral = @"""(""""|[^""]+)""*";
         public string SubFuncDef = @"^\s*(?'ispublic'Private|Public)\s+(Sub|Function)\s+(?'name'\w[\w\d]+)\(";
         public string SubFuncCall = @"(?'name'\w[\w\d]+)";
         public string stmtBlock = @"(^[\s]*)(End (If|While|Loop|Next( [A-z0-9_]+)?|Sub|Function|With))([\s]*$)";

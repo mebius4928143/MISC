@@ -1,3 +1,4 @@
+
 .sliderArea {
   max-width: 100%;
   margin: 0 auto;
@@ -48,4 +49,21 @@
     display: block;
     background-color: #ffeb3b;
     height:150px !important;
+}
+table{
+border-spacing: 0px;
+border-style: solid;
+position: relative;
+overflow: visible;
+}
+table td{
+border-spacing: 0px;
+border-style: solid;
+}
+.list
+{
+position: absolute;
+z-index: 12;
+background: aqua;
+border-style: solid;
 }

@@ -11,12 +11,16 @@ namespace vb6callgraph
         public class VBMethod
         {
             public string Name { get; set; }
-            public Dictionary<string, VBMethod> Callee { get; set; }
+            public List<VBMethod> Callee { get; set; }
             public int StartLine { get; set; }
             public int EndLine { get; set; }
             public string ModuleName { get; set; }
             public bool IsPublic { get; set; }  // true:publicメソッド
-            public VBMethod Parent { get; set; }    // 呼び出し元関数
+            public List<VBMethod> Parents { get; set; }    // 呼び出し元関数
+            public override string ToString()
+            {
+                return Name;
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace vb6callgraph
             var subFuncDef = new Regex(SubFuncDef);
             var subFuncCall = new Regex(SubFuncCall);
             var stmtBlock = new Regex(StmtBlock);
-            var anz = new List<Analyzer.VBMethod>();
+            var anz = new Dictionary<string, Analyzer.VBMethod>();
             var callee = new Dictionary<string, List<string>>();
             foreach (string file in files)
             {
@@ -41,19 +41,20 @@ namespace vb6callgraph
                         {
                             if (anz.Count > 0)
                             {
-                                if (anz[anz.Count - 1].ModuleName == mdlnm)
+                                if (anz[methodName].ModuleName == mdlnm)
                                 {
-                                    anz[anz.Count - 1].EndLine = lineno;
+                                    anz[methodName].EndLine = lineno;
                                 }
                             }
                             methodName = matches[0].Groups["name"].Value;
-                            anz.Add(new Analyzer.VBMethod()
+                            anz.Add(methodName, new Analyzer.VBMethod()
                             {
                                 Name = methodName,
                                 ModuleName = mdlnm,
                                 IsPublic = matches[0].Groups["ispublic"].Value == "Public",
                                 StartLine = lineno + 1,
                                 EndLine = lineno + 1,
+                                Parents = new List<Analyzer.VBMethod>(),
                             });
                             callee.Add(methodName, new List<string>());
                         }
@@ -85,28 +86,12 @@ namespace vb6callgraph
                     lineno++;
                 }
             }
-            foreach (string file in files)
+            var keys = callee.Keys.ToList();
+            foreach (string method in keys)
             {
-                var lines = File.ReadAllLines(file, Encoding.Default);
-                var lineno = 0;
-                foreach (string line in lines)
-                {
-                    lines[lineno] = commentOut.Replace(lines[lineno], string.Empty);
-                    lines[lineno] = stringLiteral.Replace(lines[lineno], string.Empty);
-                    var matches = subFuncDef.Matches(lines[lineno]);
-                    if (matches.Count > 0)
-                    {
-                        anz.Add(new Analyzer.VBMethod()
-                        {
-                            Name = matches[0].Groups["name"].Value,
-                            ModuleName = Path.GetFileName(file),
-                            IsPublic = matches[0].Groups["ispublic"].Value == "Public",
-                            StartLine = lineno,
-                            EndLine = lineno,
-                        });
-                    }
-                    lineno++;
-                }
+                callee[method] = callee[method].Intersect(keys).ToList();
+                anz[method].Callee = callee[method].Select(c => anz[c]).ToList();
+                callee[method].ForEach(c => anz[c].Parents.Add(anz[method]));
             }
         }
     }

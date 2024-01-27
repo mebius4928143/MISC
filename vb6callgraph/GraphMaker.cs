@@ -14,45 +14,73 @@ namespace vb6callgraph
         public string StringLiteral = @"""(""""|[^""]+)""*";
         public string SubFuncDef = @"^\s*(?'ispublic'Private|Public)\s+(Sub|Function)\s+(?'name'\w[\w\d]+)\(";
         public string SubFuncCall = @"(?'name'\w[\w\d]+)";
-        public string stmtBlock = @"(^[\s]*)(End (If|While|Loop|Next( [A-z0-9_]+)?|Sub|Function|With))([\s]*$)";
+        public string StmtBlock = @"(^[\s]*)(End (If|While|Loop|Next( [A-z0-9_]+)?|Sub|Function|With))([\s]*$)";
         public void MakerMain(string[] files)
         {
             var commentOut = new Regex(CommentOut);
             var stringLiteral = new Regex(StringLiteral);
             var subFuncDef = new Regex(SubFuncDef);
             var subFuncCall = new Regex(SubFuncCall);
+            var stmtBlock = new Regex(StmtBlock);
             var anz = new List<Analyzer.VBMethod>();
+            var callee = new Dictionary<string, List<string>>();
             foreach (string file in files)
             {
                 var lines = File.ReadAllLines(file, Encoding.Default);
                 var lineno = 0;
                 var mdlnm = Path.GetFileName(file);
+                var methodName = string.Empty;
                 foreach (string line in lines)
                 {
                     lines[lineno] = commentOut.Replace(lines[lineno], string.Empty);
-                    lines[lineno] = stringLiteral.Replace(lines[lineno], string.Empty);
-                    var matches = subFuncDef.Matches(lines[lineno]);
-                    if (matches.Count > 0)
+                    if (!lines[lineno].Trim().EndsWith(" _"))    // 継続行なし
                     {
-                        if (anz.Count > 0)
+                        lines[lineno] = stringLiteral.Replace(lines[lineno], string.Empty);
+                        var matches = subFuncDef.Matches(lines[lineno]);
+                        if (matches.Count > 0)
                         {
-                            if (anz[anz.Count - 1].ModuleName == mdlnm)
+                            if (anz.Count > 0)
                             {
-                                anz[anz.Count - 1].EndLine = lineno;
+                                if (anz[anz.Count - 1].ModuleName == mdlnm)
+                                {
+                                    anz[anz.Count - 1].EndLine = lineno;
+                                }
+                            }
+                            methodName = matches[0].Groups["name"].Value;
+                            anz.Add(new Analyzer.VBMethod()
+                            {
+                                Name = methodName,
+                                ModuleName = mdlnm,
+                                IsPublic = matches[0].Groups["ispublic"].Value == "Public",
+                                StartLine = lineno + 1,
+                                EndLine = lineno + 1,
+                            });
+                            callee.Add(methodName, new List<string>());
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(methodName))
+                            {
+                                lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
+                                var matchesCall = subFuncCall.Matches(lines[lineno]);
+                                var nowlist = callee[methodName];
+                                for (int i = 0; i < matchesCall.Count; i++)
+                                {
+                                    nowlist.Add(matchesCall[i].Value);
+                                }
+                                nowlist = nowlist.Distinct().ToList();
+                                callee[methodName] = nowlist;
                             }
                         }
-                        anz.Add(new Analyzer.VBMethod()
-                        {
-                            Name = matches[0].Groups["name"].Value,
-                            ModuleName = mdlnm,
-                            IsPublic = matches[0].Groups["ispublic"].Value == "Public",
-                            StartLine = lineno + 1,
-                            EndLine = lineno + 1,
-                        });
                     }
                     else
                     {
-                        var matchesCall = subFuncCall.Matches(lines[lineno]);
+                        // 次の行と結合して保管
+                        if (lines.Length - 1 > lineno)
+                        {
+                            lines[lineno + 1] = lines[lineno].Trim().Replace(" _", "") + lines[lineno + 1];
+                            lines[lineno] = string.Empty;
+                        }
                     }
                     lineno++;
                 }

@@ -11,7 +11,7 @@ namespace vb6callgraph
         public class VBMethod
         {
             public string Name { get; set; }
-            public List<VBMethod> Callee { get; set; }
+            public List<VBMethod> Children { get; set; }
             public int StartLine { get; set; }
             public int EndLine { get; set; }
             public string ModuleName { get; set; }

@@ -23,7 +23,7 @@ namespace vb6callgraph
             var subFuncCall = new Regex(SubFuncCall);
             var stmtBlock = new Regex(StmtBlock);
             var anz = new Dictionary<string, Analyzer.VBMethod>();
-            var callee = new Dictionary<string, List<string>>();
+            var children = new Dictionary<string, List<string>>();
             foreach (string file in files)
             {
                 var lines = File.ReadAllLines(file, Encoding.Default);
@@ -56,7 +56,7 @@ namespace vb6callgraph
                                 EndLine = lineno + 1,
                                 Parents = new List<Analyzer.VBMethod>(),
                             });
-                            callee.Add(methodName, new List<string>());
+                            children.Add(methodName, new List<string>());
                         }
                         else
                         {
@@ -64,13 +64,13 @@ namespace vb6callgraph
                             {
                                 lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
                                 var matchesCall = subFuncCall.Matches(lines[lineno]);
-                                var nowlist = callee[methodName];
+                                var nowlist = children[methodName];
                                 for (int i = 0; i < matchesCall.Count; i++)
                                 {
                                     nowlist.Add(matchesCall[i].Value);
                                 }
                                 nowlist = nowlist.Distinct().ToList();
-                                callee[methodName] = nowlist;
+                                children[methodName] = nowlist;
                             }
                         }
                     }
@@ -86,12 +86,12 @@ namespace vb6callgraph
                     lineno++;
                 }
             }
-            var keys = callee.Keys.ToList();
+            var keys = children.Keys.ToList();
             foreach (string method in keys)
             {
-                callee[method] = callee[method].Intersect(keys).ToList();
-                anz[method].Callee = callee[method].Select(c => anz[c]).ToList();
-                callee[method].ForEach(c => anz[c].Parents.Add(anz[method]));
+                children[method] = children[method].Intersect(keys).Except(new string[] { method }).ToList();
+                anz[method].Children = children[method].Select(c => anz[c]).ToList();
+                children[method].ForEach(c => anz[c].Parents.Add(anz[method]));
             }
         }
     }

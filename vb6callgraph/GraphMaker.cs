@@ -39,13 +39,6 @@ namespace vb6callgraph
                         var matches = subFuncDef.Matches(lines[lineno]);
                         if (matches.Count > 0)
                         {
-                            if (anz.Count > 0)
-                            {
-                                if (anz[methodName].ModuleName == mdlnm)
-                                {
-                                    anz[methodName].EndLine = lineno;
-                                }
-                            }
                             methodName = matches[0].Groups["name"].Value;
                             anz.Add(methodName, new Analyzer.VBMethod()
                             {
@@ -53,7 +46,6 @@ namespace vb6callgraph
                                 ModuleName = mdlnm,
                                 IsPublic = matches[0].Groups["ispublic"].Value == "Public",
                                 StartLine = lineno + 1,
-                                EndLine = lineno + 1,
                                 Parents = new List<Analyzer.VBMethod>(),
                             });
                             children.Add(methodName, new List<string>());
@@ -62,7 +54,19 @@ namespace vb6callgraph
                         {
                             if (!string.IsNullOrEmpty(methodName))
                             {
-                                lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
+                                var stmtMatches = stmtBlock.Matches(lines[lineno]);
+                                if (stmtMatches.Count > 0)
+                                {
+                                    var end = stmtMatches[0].Groups[0].Value;
+                                    if (!string.IsNullOrEmpty(methodName) && anz.ContainsKey(methodName) && anz[methodName].ModuleName == mdlnm)
+                                    {
+                                        if (end == "End Sub" || end == "End Function")
+                                        {
+                                            anz[methodName].EndLine = lineno + 1;
+                                        }
+                                    }
+                                    lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
+                                }
                                 var matchesCall = subFuncCall.Matches(lines[lineno]);
                                 var nowlist = children[methodName];
                                 for (int i = 0; i < matchesCall.Count; i++)

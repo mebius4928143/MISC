@@ -22,5 +22,13 @@ namespace vb6callgraph
                 return Name;
             }
         }
+        public class GraphMatrix
+        {
+            public List<VBMethod> Cells { get; set; }
+        }
+        public class Position
+        {
+            public VBMethod VBMethodObject { get; set; }
+        }
     }
 }

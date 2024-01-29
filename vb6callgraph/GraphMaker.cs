@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace vb6callgraph
 {
@@ -24,6 +25,7 @@ namespace vb6callgraph
             var stmtBlock = new Regex(StmtBlock);
             var anz = new Dictionary<string, Analyzer.VBMethod>();
             var children = new Dictionary<string, List<string>>();
+            var matrix = new Analyzer.GraphMatrix();
             foreach (string file in files)
             {
                 var lines = File.ReadAllLines(file, Encoding.Default);
@@ -97,6 +99,14 @@ namespace vb6callgraph
                 anz[method].Children = children[method].Select(c => anz[c]).ToList();
                 children[method].ForEach(c => anz[c].Parents.Add(anz[method]));
             }
+            matrix.Cells = new List<Analyzer.VBMethod>(anz.Count);
+            var heads = anz.Values.ToList();
+            heads.Sort(cmp);
+        }
+
+        private int cmp(Analyzer.VBMethod x, Analyzer.VBMethod y)
+        {
+            return x.Parents.Count - y.Parents.Count;
         }
     }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace vb6callgraph
 {
@@ -23,15 +20,16 @@ namespace vb6callgraph
             var subFuncDef = new Regex(SubFuncDef);
             var subFuncCall = new Regex(SubFuncCall);
             var stmtBlock = new Regex(StmtBlock);
-            var anz = new Dictionary<string, Analyzer.VBMethod>();
+            var anz = new Dictionary<string, VBMethod>();
             var children = new Dictionary<string, List<string>>();
-            var matrix = new Analyzer.GraphMatrix();
+            var matrix = new GraphMatrix();
             foreach (string file in files)
             {
                 var lines = File.ReadAllLines(file, Encoding.Default);
                 var lineno = 0;
                 var mdlnm = Path.GetFileName(file);
                 var methodName = string.Empty;
+                var anzkey = string.Empty;
                 foreach (string line in lines)
                 {
                     lines[lineno] = commentOut.Replace(lines[lineno], string.Empty);
@@ -41,42 +39,43 @@ namespace vb6callgraph
                         var matches = subFuncDef.Matches(lines[lineno]);
                         if (matches.Count > 0)
                         {
+#if true
                             methodName = matches[0].Groups["name"].Value;
-                            anz.Add(methodName, new Analyzer.VBMethod()
-                            {
-                                Name = methodName,
-                                ModuleName = mdlnm,
-                                IsPublic = matches[0].Groups["ispublic"].Value == "Public",
-                                StartLine = lineno + 1,
-                                Parents = new List<Analyzer.VBMethod>(),
-                            });
-                            children.Add(methodName, new List<string>());
+                            var vbm = Analyzer.AddVbMethod(methodName, mdlnm);
+                            anzkey = vbm.GeyKey();
+                            anz.Add(anzkey, vbm);
+                            vbm.IsPublic = matches[0].Groups["ispublic"].Value == "Public";
+                            vbm.StartLine = lineno + 1;
+                            children.Add(VBMethod.GetKey(methodName, mdlnm), new List<string>());
+#else
+#endif
                         }
                         else
                         {
-                            if (!string.IsNullOrEmpty(methodName))
+                            if (!string.IsNullOrEmpty(anzkey))
                             {
                                 var stmtMatches = stmtBlock.Matches(lines[lineno]);
                                 if (stmtMatches.Count > 0)
                                 {
                                     var end = stmtMatches[0].Groups[0].Value;
-                                    if (!string.IsNullOrEmpty(methodName) && anz.ContainsKey(methodName) && anz[methodName].ModuleName == mdlnm)
+                                    if (!string.IsNullOrEmpty(anzkey) && anz.ContainsKey(anzkey) && anz[anzkey].ModuleName == mdlnm)
                                     {
                                         if (end == "End Sub" || end == "End Function")
                                         {
-                                            anz[methodName].EndLine = lineno + 1;
+                                            anz[anzkey].EndLine = lineno + 1;
                                         }
                                     }
                                     lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
                                 }
                                 var matchesCall = subFuncCall.Matches(lines[lineno]);
-                                var nowlist = children[methodName];
+                                var nowlist = children[anzkey];
                                 for (int i = 0; i < matchesCall.Count; i++)
                                 {
                                     nowlist.Add(matchesCall[i].Value);
                                 }
                                 nowlist = nowlist.Distinct().ToList();
-                                children[methodName] = nowlist;
+                                children[anzkey] = nowlist;
+                                anzkey = null;
                             }
                         }
                     }
@@ -93,18 +92,18 @@ namespace vb6callgraph
                 }
             }
             var keys = children.Keys.ToList();
-            foreach (string method in keys)
+            foreach (string _anzkey in keys)
             {
-                children[method] = children[method].Intersect(keys).Except(new string[] { method }).ToList();
-                anz[method].Children = children[method].Select(c => anz[c]).ToList();
-                children[method].ForEach(c => anz[c].Parents.Add(anz[method]));
+                children[_anzkey] = children[_anzkey].Intersect(keys).Except(new string[] { _anzkey }).ToList();
+                anz[_anzkey].Children = children[_anzkey].Select(c => anz[c]).ToList();
+                children[_anzkey].ForEach(c => anz[c].Parents.Add(anz[_anzkey]));
             }
-            matrix.Cells = new List<Analyzer.VBMethod>(anz.Count);
+            matrix.Cells = new List<VBMethod>(anz.Count);
             var heads = anz.Values.ToList();
             heads.Sort(cmp);
         }
 
-        private int cmp(Analyzer.VBMethod x, Analyzer.VBMethod y)
+        private int cmp(VBMethod x, VBMethod y)
         {
             return x.Parents.Count - y.Parents.Count;
         }

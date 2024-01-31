@@ -54,6 +54,14 @@ namespace vb6callgraph
                         {
                             if (!string.IsNullOrEmpty(anzkey))
                             {
+                                var matchesCall = subFuncCall.Matches(lines[lineno]);
+                                var nowlist = children[anzkey];
+                                for (int i = 0; i < matchesCall.Count; i++)
+                                {
+                                    nowlist.Add(matchesCall[i].Value);
+                                }
+                                nowlist = nowlist.Distinct().ToList();
+                                children[anzkey] = nowlist;
                                 var stmtMatches = stmtBlock.Matches(lines[lineno]);
                                 if (stmtMatches.Count > 0)
                                 {
@@ -63,19 +71,11 @@ namespace vb6callgraph
                                         if (end == "End Sub" || end == "End Function")
                                         {
                                             anz[anzkey].EndLine = lineno + 1;
+                                            anzkey = null;
                                         }
                                     }
                                     lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
                                 }
-                                var matchesCall = subFuncCall.Matches(lines[lineno]);
-                                var nowlist = children[anzkey];
-                                for (int i = 0; i < matchesCall.Count; i++)
-                                {
-                                    nowlist.Add(matchesCall[i].Value);
-                                }
-                                nowlist = nowlist.Distinct().ToList();
-                                children[anzkey] = nowlist;
-                                anzkey = null;
                             }
                         }
                     }

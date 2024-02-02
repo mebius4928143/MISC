@@ -251,9 +251,8 @@ namespace vb6callgraph
                                     }
                                     lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
                                 }
-<<<<<<< HEAD
-                                var matchesCall = subFuncCall.Matches(lines[lineno]);
-                                var nowlist = children[anzkey];
+                                matchesCall = subFuncCall.Matches(lines[lineno]);
+                                nowlist = children[anzkey];
                                 for (int i = 0; i < matchesCall.Count; i++)
                                 {
                                     nowlist.Add(matchesCall[i].Value);
@@ -262,8 +261,6 @@ namespace vb6callgraph
                                 nowlist = nowlist.Except(vbReserved).ToList();
                                 children[anzkey] = nowlist;
                                 anzkey = null;
-=======
->>>>>>> fcfbb224680cd7595302e96c411823af66f63930
                             }
                         }
                     }

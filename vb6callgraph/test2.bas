@@ -18,7 +18,7 @@ Private Sub CloseButton2_Click()
 End Sub
 
 Private Sub Form_Load2()
-    Call ConnectDatabase
+    Call test.ConnectDatabase
     CodeTextBox.Text = ""
     Call ClearData
 End Sub

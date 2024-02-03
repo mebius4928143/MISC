@@ -196,7 +196,7 @@ namespace vb6callgraph
             var subFuncCall = new Regex(SubFuncCall);
             var stmtBlock = new Regex(StmtBlock);
             var anz = new Dictionary<string, VBMethod>();
-            var children = new Dictionary<string, List<(string mdl, string method)>>();
+            var children = new Dictionary<string, Dictionary<string, List<(string mdl, string method)>>>();
             var matrix = new GraphMatrix();
             foreach (string file in files)
             {
@@ -221,7 +221,11 @@ namespace vb6callgraph
                             anz.Add(anzkey, vbm);
                             vbm.IsPublic = matches[0].Groups["ispublic"].Value == "Public";
                             vbm.StartLine = lineno + 1;
-                            children.Add(VBMethod.GetKey(methodName, mdlnm), new List<(string mdl, string method)>());
+                            if (!children.ContainsKey(mdlnm))
+                            {
+                                children.Add(mdlnm, new Dictionary<string, List<(string mdl, string method)>>());
+                            }
+                            children[mdlnm].Add(VBMethod.GetKey(methodName, mdlnm), new List<(string mdl, string method)>());
 #else
 #endif
                         }
@@ -244,7 +248,7 @@ namespace vb6callgraph
                                     lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
                                 }
                                 var matchesCall = subFuncCall.Matches(lines[lineno]);
-                                var nowlist = children[anzkey];
+                                var nowlist = children[mdlnm][anzkey];
                                 for (int i = 0; i < matchesCall.Count; i++)
                                 {
                                     var mdl = matchesCall[i].Groups["module"].Value;
@@ -254,7 +258,7 @@ namespace vb6callgraph
                                 }
                                 nowlist = nowlist.Distinct().ToList();
                                 nowlist = nowlist.Where(i => vbReserved.All(j => j != i.method)).ToList();  // メソッド名が予約語に無いこと
-                                children[anzkey] = nowlist;
+                                children[mdlnm][anzkey] = nowlist;
                                 if (anz[anzkey].EndLine > 0)
                                 {
                                     anzkey = null;
@@ -274,13 +278,17 @@ namespace vb6callgraph
                     lineno++;
                 }
             }
-            var keys = children.Keys.ToList();
-            //foreach (string _anzkey in keys)
-            //{
-            //    children[_anzkey] = children[_anzkey].Intersect(keys).Except(new string[] { _anzkey }).ToList();
-            //    anz[_anzkey].Children = children[_anzkey].Select(c => anz[c]).ToList();
-            //    children[_anzkey].ForEach(c => anz[c].Parents.Add(anz[_anzkey]));
-            //}
+            var mdlkeys = children.Keys.ToList();
+            foreach (string module in mdlkeys)
+            {
+                var keys = children[module].Keys.ToList();
+                foreach (string azky in keys)
+                {
+                    children[module][azky] = children[module][azky].Intersect(keys.Select(k => (module, k))).Except(new (string, string)[] { (module, azky) }).ToList();
+                    anz[azky].Children = children[module][azky].Select(c => anz[c]).ToList();
+                    children[module][azky].ForEach(c => anz[c].Parents.Add(anz[azky]));
+                }
+            }
             matrix.Cells = new List<VBMethod>(anz.Count);
             var heads = anz.Values.ToList();
             heads.Sort(cmp);

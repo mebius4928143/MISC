@@ -74,7 +74,7 @@ End Property
 ' 追加処理を実行します
 ' Returns:  結果 [True:成功 / False:失敗]
 '********************************************************
-Private Function AddLogic() As Boolean
+Public Function AddLogic() As Boolean
     If (InvalidCode(Code)) Then
         Call MsgBox("追加できませんでした")
         AddLogic = False
@@ -285,7 +285,7 @@ End Function
 '********************************************************
 ' データベースへの接続を開始します
 '********************************************************
-Private Sub ConnectDatabase()
+Public Sub ConnectDatabase()
     Set DB = _
         DBEngine.Workspaces(0).OpenDatabase(FILENAME)
 End Sub

@@ -202,7 +202,7 @@ namespace vb6callgraph
             {
                 var lines = File.ReadAllLines(file, Encoding.Default);
                 var lineno = 0;
-                var mdlnm = Path.GetFileName(file);
+                var mdlnm = Path.GetFileNameWithoutExtension(file);
                 var methodName = string.Empty;
                 var anzkey = string.Empty;
                 foreach (string line in lines)
@@ -281,12 +281,17 @@ namespace vb6callgraph
             var mdlkeys = children.Keys.ToList();
             foreach (string module in mdlkeys)
             {
+                var x1 = anz.Values.Where(r => r.ModuleName == module).Select(r => ("*", r.Name)).ToList();
+                var x2 = anz.Values.Where(r => r.ModuleName != module && r.IsPublic).Select(r => (r.ModuleName, r.Name)).ToList();
                 var keys = children[module].Keys.ToList();
                 foreach (string azky in keys)
                 {
-                    children[module][azky] = children[module][azky].Intersect(keys.Select(k => (module, k))).Except(new (string, string)[] { (module, azky) }).ToList();
-                    anz[azky].Children = children[module][azky].Select(c => anz[c]).ToList();
-                    children[module][azky].ForEach(c => anz[c].Parents.Add(anz[azky]));
+                    var r = new List<(string, string)>();
+                    r.AddRange(children[module][azky].Intersect(x1).Except(new (string, string)[] { (module, azky) }).ToList());
+                    r.AddRange(children[module][azky].Intersect(x2).Except(new (string, string)[] { (module, azky) }).ToList());
+                    children[module][azky] = r;
+                    anz[azky].Children = children[module][azky].Select(c => anz[VBMethod.GetKey(c.method, c.mdl, module)]).ToList();
+                    children[module][azky].ForEach(c => anz[VBMethod.GetKey(c.method, c.mdl, module)].Parents.Add(anz[azky]));
                 }
             }
             matrix.Cells = new List<VBMethod>(anz.Count);

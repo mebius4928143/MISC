@@ -36,15 +36,19 @@ namespace vb6callgraph
         {
             return GetKey(this.Name, this.ModuleName);
         }
-        public static string GetKey(string name, string moduleName)
+        public static string GetKey(string name, string moduleName, string curmdl = "")
         {
-            return getKey(name, moduleName);
+            return getKey(name, moduleName, curmdl);
         }
-        private static string getKey(string name, string moduleName)
+        private static string getKey(string name, string moduleName, string curmdl = "")
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(moduleName))
             {
                 throw new Exception("No Name Or Module Name.");
+            }
+            if (moduleName == "*")
+            {
+                moduleName = curmdl;
             }
             return $"{name}@{moduleName}";
         }

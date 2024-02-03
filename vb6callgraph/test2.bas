@@ -23,3 +23,8 @@ Private Sub Form_Load2()
     Call ClearData
 End Sub
 
+Public Sub SubPublic()
+    CodeTextBox.Text = ""
+    Call Form_Load2
+End Sub
+

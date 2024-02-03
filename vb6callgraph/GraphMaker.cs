@@ -281,8 +281,8 @@ namespace vb6callgraph
             var mdlkeys = children.Keys.ToList();
             foreach (string module in mdlkeys)
             {
-                var x1 = anz.Values.Where(r => r.ModuleName == module).Select(r => ("*", r.Name)).ToList();
-                var x2 = anz.Values.Where(r => r.ModuleName != module && r.IsPublic).Select(r => (r.ModuleName, r.Name)).ToList();
+                var x1 = anz.Values.Where(r => r.ModuleName == module).Select(r => ("*", r.MethodName)).ToList();
+                var x2 = anz.Values.Where(r => r.ModuleName != module && r.IsPublic).Select(r => (r.ModuleName, r.MethodName)).ToList();
                 var keys = children[module].Keys.ToList();
                 foreach (string azky in keys)
                 {
@@ -298,7 +298,12 @@ namespace vb6callgraph
             var heads = anz.Values.ToList();
             heads.Sort(cmp);
         }
-
+        /// <summary>
+        /// 親参照カウント順に並べ替える
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private int cmp(VBMethod x, VBMethod y)
         {
             return x.Parents.Count - y.Parents.Count;

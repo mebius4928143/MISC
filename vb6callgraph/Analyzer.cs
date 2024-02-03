@@ -8,15 +8,15 @@ namespace vb6callgraph
 {
     public class Analyzer
     {
-        public static VBMethod AddVbMethod(string name, string moduleName)
+        public static VBMethod AddVbMethod(string methodName, string moduleName)
         {
-            var vBMethod = new VBMethod() { Name = name, ModuleName = moduleName };
-            return vBMethod;
+            var vbMethod = new VBMethod() { MethodName = methodName, ModuleName = moduleName };
+            return vbMethod;
         }
     }
     public class VBMethod
     {
-        public string Name { get; set; }
+        public string MethodName { get; set; }
         public List<VBMethod> Children { get; set; }
         public int StartLine { get; set; }
         public int EndLine { get; set; }
@@ -25,7 +25,7 @@ namespace vb6callgraph
         public List<VBMethod> Parents { get; set; }    // 呼び出し元関数
         public override string ToString()
         {
-            return Name;
+            return MethodName;
         }
         public VBMethod()
         {
@@ -34,7 +34,7 @@ namespace vb6callgraph
         }
         public string GeyKey()
         {
-            return GetKey(this.Name, this.ModuleName);
+            return GetKey(this.MethodName, this.ModuleName);
         }
         public static string GetKey(string name, string moduleName, string curmdl = "")
         {

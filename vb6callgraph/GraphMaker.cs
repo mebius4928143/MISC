@@ -287,10 +287,10 @@ namespace vb6callgraph
                 foreach (string azky in keys)
                 {
                     var r = new List<(string, string)>();
-                    r.AddRange(children[module][azky].Intersect(x1).Except(new (string, string)[] { (module, azky) }).ToList());
-                    r.AddRange(children[module][azky].Intersect(x2).Except(new (string, string)[] { (module, azky) }).ToList());
+                    r.AddRange(children[module][azky].Intersect(x1));
+                    r.AddRange(children[module][azky].Intersect(x2));
                     children[module][azky] = r;
-                    anz[azky].Children = children[module][azky].Select(c => anz[VBMethod.GetKey(c.method, c.mdl, module)]).ToList();
+                    anz[azky].Children = children[module][azky].Select(c => anz[VBMethod.GetKey(c.method, c.mdl, module)]).Except(new VBMethod[] { anz[azky] }).ToList();
                     children[module][azky].ForEach(c => anz[VBMethod.GetKey(c.method, c.mdl, module)].Parents.Add(anz[azky]));
                 }
             }

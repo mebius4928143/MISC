@@ -294,7 +294,7 @@ namespace vb6callgraph
                     children[module][azky].ForEach(c => anz[VBMethod.GetKey(c.method, c.mdl, module)].Parents.Add(anz[azky]));
                 }
             }
-            matrix.Cells = new List<VBMethod>(anz.Count);
+            matrix.Positions = anz.Values.Select(a => new Position() { VBMethodObject = a }).ToList();
             var heads = anz.Values.ToList();
             heads.Sort(cmp);
         }

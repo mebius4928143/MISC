@@ -55,10 +55,14 @@ namespace vb6callgraph
     }
     public class GraphMatrix
     {
-        public List<VBMethod> Cells { get; set; }
+        public List<Position> Positions { get; set; }
+        public int width{  get; set; }
+        public int height{  get; set; }
     }
     public class Position
     {
+        public int x { get; set; }
+        public int y { get; set; }
         public VBMethod VBMethodObject { get; set; }
     }
 }

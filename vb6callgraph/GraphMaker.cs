@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -291,12 +292,13 @@ namespace vb6callgraph
                     r.AddRange(children[module][azky].Intersect(x2));
                     children[module][azky] = r;
                     anz[azky].Children = children[module][azky].Select(c => anz[VBMethod.GetKey(c.method, c.mdl, module)]).Except(new VBMethod[] { anz[azky] }).ToList();
-                    children[module][azky].ForEach(c => anz[VBMethod.GetKey(c.method, c.mdl, module)].Parents.Add(anz[azky]));
+                    //children[module][azky].ForEach(c => anz[VBMethod.GetKey(c.method, c.mdl, module)].Parents.Add(anz[azky]));
+                    anz[azky].Children.ForEach(c => anz[c.GeyKey()].Parents.Add(anz[azky]));
                 }
             }
             matrix.Positions = anz.Values.Select(a => new Position() { VBMethodObject = a }).ToList();
             //matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Children.Count == 0 ? 0 : p.VBMethodObject.Children.Max(a => GetDepth(a)));
-            matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Parents.Count == 0 ? 0 : p.VBMethodObject.Parents.Max(a => GetCeil(a)));
+            matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Parents.Count == 0 ? 0 : p.VBMethodObject.Parents.Max(a => GetCeil(a) + 1));
         }
         public int GetDepth(VBMethod vBMethod)
         {
@@ -304,7 +306,8 @@ namespace vb6callgraph
         }
         public int GetCeil(VBMethod vBMethod)
         {
-            return vBMethod.Parents.Count == 0 ? 0 : vBMethod.Parents.Max(a => GetDepth(a) + 1);
+            Debug.Print(vBMethod.ToString());
+            return vBMethod.Parents.Count == 0 ? 0 : vBMethod.Parents.Max(a => GetCeil(a) + 1);
         }
         /// <summary>
         /// 親参照カウント順に並べ替える

@@ -25,7 +25,7 @@ namespace vb6callgraph
         public List<VBMethod> Parents { get; set; }    // 呼び出し元関数
         public override string ToString()
         {
-            return MethodName;
+            return VBMethod.GetKey(this.ModuleName, this.MethodName);
         }
         public VBMethod()
         {

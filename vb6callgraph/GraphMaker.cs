@@ -295,19 +295,16 @@ namespace vb6callgraph
                 }
             }
             matrix.Positions = anz.Values.Select(a => new Position() { VBMethodObject = a }).ToList();
-            var xxx = anz.Values.Max(a=>GetDepth(a));
-            //heads.Sort(cmp);
+            //matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Children.Count == 0 ? 0 : p.VBMethodObject.Children.Max(a => GetDepth(a)));
+            matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Parents.Count == 0 ? 0 : p.VBMethodObject.Parents.Max(a => GetCeil(a)));
         }
         public int GetDepth(VBMethod vBMethod)
         {
-            return vBMethod.Children.Count == 0 ? 1 : vBMethod.Children.Max(a => GetDepth(a) + 1);
+            return vBMethod.Children.Count == 0 ? 0 : vBMethod.Children.Max(a => GetDepth(a) + 1);
         }
-        public IEnumerable<VBMethod> GetChildren(VBMethod x)
+        public int GetCeil(VBMethod vBMethod)
         {
-            foreach (var rChild in x.Children.SelectMany(c => GetChildren(c)))
-            {
-                yield return rChild;
-            }
+            return vBMethod.Parents.Count == 0 ? 0 : vBMethod.Parents.Max(a => GetDepth(a) + 1);
         }
         /// <summary>
         /// 親参照カウント順に並べ替える

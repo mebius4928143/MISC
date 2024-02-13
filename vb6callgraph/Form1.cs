@@ -22,7 +22,7 @@ namespace vb6callgraph
             var dlg = new OpenFileDialog();
             dlg.Multiselect = true;
             dlg.InitialDirectory = Environment.CurrentDirectory;
-            dlg.Filter = "(*.frm,*.bas)|*.frm;*.bas";
+            dlg.Filter = "(*.frm,*.bas,*.cls)|*.frm;*.bas;*.cls";
             var res = dlg.ShowDialog();
             if (res == DialogResult.OK)
             {

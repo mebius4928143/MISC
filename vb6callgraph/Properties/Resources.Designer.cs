@@ -59,5 +59,30 @@ namespace vb6callgraph.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   &lt;html&gt;
+        ///  &lt;head&gt;
+        ///    &lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///      #network {
+        ///        width:  400px;
+        ///        height: 400px;
+        ///        border: 1px solid #000;
+        ///      }
+        ///    &lt;/style&gt;
+        ///    &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js&quot;&gt;&lt;/script&gt;
+        ///  &lt;/head&gt;
+        ///  &lt;body&gt;
+        ///    &lt;div id=&quot;network&quot;&gt;&lt;/div&gt;
+        ///    &lt;script type=&quot;text/javascript&quot;&gt;
+        ///      var nodes = new vis.DataSet([
+        ///        [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string modulenet {
+            get {
+                return ResourceManager.GetString("modulenet", resourceCulture);
+            }
+        }
     }
 }

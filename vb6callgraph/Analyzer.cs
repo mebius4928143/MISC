@@ -63,6 +63,7 @@ namespace vb6callgraph
     {
         public int x { get; set; }
         public int y { get; set; }
+        public int index { get; set; }
         public VBMethod VBMethodObject { get; set; }
     }
 }

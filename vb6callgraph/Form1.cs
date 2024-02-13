@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using vb6callgraph.Properties;
 
 namespace vb6callgraph
 {
@@ -28,7 +29,23 @@ namespace vb6callgraph
             {
                 var files = dlg.FileNames;
                 var grp = new GraphMaker();
-                grp.MakerMain(files);
+                var matrix = grp.MakerMain(files);
+                var html = Resources.modulenet.Split('\n');
+                var nodes = new List<string>();
+                var edges = new List<string>();
+                foreach ( Position s in matrix.Positions)
+                {
+                    //{id: 1, label: 'A'},
+                    nodes.Add($"{{id: {s.index + 1}, label: '{s.VBMethodObject.GeyKey()}'}},");
+                }
+                foreach (Position s in matrix.Positions.Where(p => p.VBMethodObject.Children.Count > 0))
+                {
+                    //{from: 1, to: 2, arrows: 'to'},
+                    s.VBMethodObject.Children.ForEach(c =>
+                    {
+                        edges.Add($"{{from: {s.index + 1}, to: {matrix.Positions.First(p => p.VBMethodObject.GeyKey() == c.GeyKey()).index + 1}, arrows: 'to'}},");
+                    });
+                }
             }
         }
     }

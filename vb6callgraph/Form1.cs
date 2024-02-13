@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,11 @@ namespace vb6callgraph
                         edges.Add($"{{from: {s.index + 1}, to: {matrix.Positions.First(p => p.VBMethodObject.GeyKey() == c.GeyKey()).index + 1}, arrows: 'to'}},");
                     });
                 }
+                var nodeidx = html.ToList().FindIndex(t => t.Trim() == "/*@nodes@*/");
+                html[nodeidx] = string.Join("\r\n", nodes);
+                var edgeidx = html.ToList().FindIndex(t => t.Trim() == "/*@edges@*/");
+                html[edgeidx] = string.Join("\r\n", edges);
+                File.WriteAllLines("modlenet.html", html);
             }
         }
     }

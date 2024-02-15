@@ -1,48 +1,74 @@
-<html>
-  <head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet">
-    <style type="text/css">
-      #network {
-        width:  400px;
-        height: 400px;
-        border: 1px solid #000;
-      }
-    </style>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-  </head>
-  <body>
-    <div id="network"></div>
-    <script type="text/javascript">
-      var nodes = new vis.DataSet([
-      /*
-        {id: 1, label: 'A'},
-        {id: 2, label: 'B'},
-        {id: 3, label: 'C'},
-        {id: 4, label: 'D'},
-        {id: 5, label: 'E'},
-        {id: 6, label: 'F'},
-        {id: 7, label: 'G'},
-        {id: 8, label: 'H'},
-        */
-      ]);
-      var edges = new vis.DataSet([
-      /*
-        {from: 1, to: 2, arrows: 'to'},
-        {from: 1, to: 3, arrows: 'to'},
-        {from: 3, to: 4, arrows: 'to'},
-        {from: 6, to: 1, arrows: 'to'},
-        {from: 7, to: 8, arrows: 'to'},
-        {from: 8, to: 7, arrows: 'to'},
-        */
-      ]);
-      var container = document.getElementById('network');
-      var data = {
-        nodes: nodes,
-        edges: edges
-      };
-      var options = {
-      };
-      var network = new vis.Network(container, data, options);
-    </script>
-  </body>
+<html lang="en">
+
+<head>
+  <title>mxGraph sample</title>
+  <script type="text/javascript">
+    const mxLoadResources = false
+    const mxLoadStylesheets = false
+  </script>
+  <script type="text/javascript" src="https://www.unpkg.com/mxgraph/javascript/mxClient.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://www.unpkg.com/mxgraph/javascript/src/css/common.css">
+</head>
+
+<body>
+  <div id="container"></div>
+  <script type="text/javascript">
+    // グラフを表示する領域を確保
+    const container = document.getElementById('container')
+    // グラフのインスタンス生成
+    const graph = new mxGraph(container)
+
+    // グラフにノードやエッジを追加する際に必要
+    const parent = graph.getDefaultParent()
+    // 今回は階層グラフを自動レイアウトで描画したいため、レイアウトのインスタンスを生成
+    const layout = new mxHierarchicalLayout(graph)
+
+    // グラフの形状やデザインの変更を行う(グラフモデルを変更する)際は
+    // beginUpdate -> グラフモデル変更 -> endUpdate の順に行う
+    graph.getModel().beginUpdate()
+    try {
+      // tryブロックの中でグラフの形状やデザインの変更を行う
+
+      // ノード追加	
+      // const v1 = graph.insertVertex(parent, null, '1', null, null, 30, 30, 'shape=cylinder')
+      // const v2 = graph.insertVertex(parent, null, '2', null, null, 30, 30, 'shape=triangle')
+      // const v3 = graph.insertVertex(parent, null, '3', null, null, 30, 30, 'shape=cloud')
+      // const v4 = graph.insertVertex(parent, null, '4', null, null, 30, 30, 'shape=hexagon')
+      // const v5 = graph.insertVertex(parent, null, '5', null, null, 150, 30, 'shape=rectangle')
+      // const v6 = graph.insertVertex(parent, null, '6', null, null, 30, 30, 'shape=ellipse')
+      // const v7 = graph.insertVertex(parent, null, '7', null, null, 30, 30, 'shape=doubleEllipse')
+      // const v8 = graph.insertVertex(parent, null, '8', null, null, 30, 30, 'shape=rhombus')
+      // const v9 = graph.insertVertex(parent, null, '9', null, null, 30, 30, 'fillColor=orange')
+
+      // // styleに名前をつけることもできる
+      // const defaultNodeStyle = graph.getStylesheet().getDefaultVertexStyle()
+      // const style = mxUtils.clone(defaultNodeStyle)
+      // style['shape'] = 'actor'
+      // graph.getStylesheet().putCellStyle('myFavoriteStyle', style)
+      // const v10 = graph.insertVertex(parent, null, '10', null, null, 30, 30, 'myFavoriteStyle')
+
+      // const v11 = graph.insertVertex(parent, null, '11', null, null, 30, 30, null)
+      // const v12 = graph.insertVertex(parent, null, '12', null, null, 30, 30, null)
+
+      // エッジ追加
+      // graph.insertEdge(parent, null, null, v1, v3, null)
+      // graph.insertEdge(parent, null, null, v1, v2, null)
+      // graph.insertEdge(parent, null, null, v2, v4, null)
+      // graph.insertEdge(parent, null, null, v2, v5, null)
+      // graph.insertEdge(parent, null, null, v3, v6, null)
+      // graph.insertEdge(parent, null, null, v3, v8, null)
+      // graph.insertEdge(parent, null, null, v6, v7, null)
+      // graph.insertEdge(parent, null, null, v6, v9, null)
+      // graph.insertEdge(parent, null, null, v4, v10, null)
+      // graph.insertEdge(parent, null, null, v4, v11, null)
+      // graph.insertEdge(parent, null, null, v5, v12, null)
+      // graph.insertEdge(parent, null, null, v3, v4, null)
+      // 追加したノード・エッジに基づいてレイアウトの自動計算を行う
+      layout.execute(parent)
+    } finally {
+      graph.getModel().endUpdate()
+    }
+  </script>
+</body>
+
 </html>

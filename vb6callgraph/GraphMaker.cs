@@ -189,7 +189,7 @@ namespace vb6callgraph
         //public string SubFuncCall = @"(?'name'\w[\w\d]+)";
         public string SubFuncCall = @"((?'module'\w[\w\d]+)\.)?(?'method'\w[\w\d]+)";
         public string StmtBlock = @"(^[\s]*)(End (If|While|Loop|Next( [A-z0-9_]+)?|Sub|Function|With))([\s]*$)";
-        public void MakerMain(string[] files)
+        public GraphMatrix MakerMain(string[] files)
         {
             var commentOut = new Regex(CommentOut);
             var stringLiteral = new Regex(StringLiteral);
@@ -243,7 +243,6 @@ namespace vb6callgraph
                                         if (end == "End Sub" || end == "End Function")
                                         {
                                             anz[anzkey].EndLine = lineno + 1;
-                                            //anzkey = null;
                                         }
                                     }
                                     lines[lineno] = stmtBlock.Replace(lines[lineno], string.Empty);
@@ -292,13 +291,12 @@ namespace vb6callgraph
                     r.AddRange(children[module][azky].Intersect(x2));
                     children[module][azky] = r;
                     anz[azky].Children = children[module][azky].Select(c => anz[VBMethod.GetKey(c.method, c.mdl, module)]).Except(new VBMethod[] { anz[azky] }).ToList();
-                    //children[module][azky].ForEach(c => anz[VBMethod.GetKey(c.method, c.mdl, module)].Parents.Add(anz[azky]));
                     anz[azky].Children.ForEach(c => anz[c.GeyKey()].Parents.Add(anz[azky]));
                 }
             }
-            matrix.Positions = anz.Values.Select(a => new Position() { VBMethodObject = a }).ToList();
-            //matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Children.Count == 0 ? 0 : p.VBMethodObject.Children.Max(a => GetDepth(a)));
+            matrix.Positions = anz.Values.Select((a, i) => new Position() { VBMethodObject = a, index = i }).ToList();
             matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Parents.Count == 0 ? 0 : p.VBMethodObject.Parents.Max(a => GetCeil(a) + 1));
+            return matrix;
         }
         public int GetDepth(VBMethod vBMethod)
         {

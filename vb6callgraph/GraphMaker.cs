@@ -10,7 +10,7 @@ namespace vb6callgraph
     public class GraphMaker
     {
         #region VB6予約語
-        private string[] vbReserved = new string[]{
+        private readonly string[] vbReserved = new string[]{
         "Abs",
         "AddressOf",
         "And",
@@ -282,14 +282,15 @@ namespace vb6callgraph
             foreach (string module in mdlkeys)
             {
                 var x1 = anz.Values.Where(r => r.ModuleName == module).Select(r => ("*", r.MethodName)).ToList();
-                var x2 = anz.Values.Where(r => r.ModuleName != module && r.IsPublic).Select(r => (r.ModuleName, r.MethodName)).ToList();
+                var x2 = anz.Values.Where(r => r.ModuleName != module && r.IsPublic).Select(r => (r.ModuleName, r.MethodName)).ToList(); // public (module+method name)
                 var keys = children[module].Keys.ToList();
                 foreach (string azky in keys)
                 {
                     var r = new List<(string, string)>();
                     r.AddRange(children[module][azky].Intersect(x1));
+                    r.AddRange(x2.Where(t => children[module][azky].Any(f => f.mdl == "*" && f.method == t.MethodName)));
                     r.AddRange(children[module][azky].Intersect(x2));
-                    children[module][azky] = r;
+                    children[module][azky] = r.Distinct().ToList();
                     anz[azky].Children = children[module][azky].Select(c => anz[VBMethod.GetKey(c.method, c.mdl, module)]).Except(new VBMethod[] { anz[azky] }).ToList();
                     anz[azky].Children.ForEach(c => anz[c.GeyKey()].Parents.Add(anz[azky]));
                 }
@@ -306,16 +307,6 @@ namespace vb6callgraph
         {
             Debug.Print(vBMethod.ToString());
             return vBMethod.Parents.Count == 0 ? 0 : vBMethod.Parents.Max(a => GetCeil(a) + 1);
-        }
-        /// <summary>
-        /// 親参照カウント順に並べ替える
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        private int cmp(VBMethod x, VBMethod y)
-        {
-            return x.Parents.Count - y.Parents.Count;
         }
     }
 }

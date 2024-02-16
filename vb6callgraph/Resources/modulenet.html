@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="ja">
 
 <head>
   <title>mxGraph sample</title>
@@ -13,23 +13,23 @@
 <body>
   <div id="container"></div>
   <script type="text/javascript">
-    // ã‚°ãƒ©ãƒ•ã‚’è¡¨ç¤ºã™ã‚‹é ˜åŸŸã‚’ç¢ºä¿
+    // ƒOƒ‰ƒt‚ğ•\¦‚·‚é—Ìˆæ‚ğŠm•Û
     const container = document.getElementById('container')
-    // ã‚°ãƒ©ãƒ•ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
+    // ƒOƒ‰ƒt‚ÌƒCƒ“ƒXƒ^ƒ“ƒX¶¬
     const graph = new mxGraph(container)
 
-    // ã‚°ãƒ©ãƒ•ã«ãƒãƒ¼ãƒ‰ã‚„ã‚¨ãƒƒã‚¸ã‚’è¿½åŠ ã™ã‚‹éš›ã«å¿…è¦
+    // ƒOƒ‰ƒt‚Éƒm[ƒh‚âƒGƒbƒW‚ğ’Ç‰Á‚·‚éÛ‚É•K—v
     const parent = graph.getDefaultParent()
-    // ä»Šå›ã¯éšå±¤ã‚°ãƒ©ãƒ•ã‚’è‡ªå‹•ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã§æç”»ã—ãŸã„ãŸã‚ã€ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
+    // ¡‰ñ‚ÍŠK‘wƒOƒ‰ƒt‚ğ©“®ƒŒƒCƒAƒEƒg‚Å•`‰æ‚µ‚½‚¢‚½‚ßAƒŒƒCƒAƒEƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
     const layout = new mxHierarchicalLayout(graph)
 
-    // ã‚°ãƒ©ãƒ•ã®å½¢çŠ¶ã‚„ãƒ‡ã‚¶ã‚¤ãƒ³ã®å¤‰æ›´ã‚’è¡Œã†(ã‚°ãƒ©ãƒ•ãƒ¢ãƒ‡ãƒ«ã‚’å¤‰æ›´ã™ã‚‹)éš›ã¯
-    // beginUpdate -> ã‚°ãƒ©ãƒ•ãƒ¢ãƒ‡ãƒ«å¤‰æ›´ -> endUpdate ã®é †ã«è¡Œã†
+    // ƒOƒ‰ƒt‚ÌŒ`ó‚âƒfƒUƒCƒ“‚Ì•ÏX‚ğs‚¤(ƒOƒ‰ƒtƒ‚ƒfƒ‹‚ğ•ÏX‚·‚é)Û‚Í
+    // beginUpdate -> ƒOƒ‰ƒtƒ‚ƒfƒ‹•ÏX -> endUpdate ‚Ì‡‚És‚¤
     graph.getModel().beginUpdate()
     try {
-      // tryãƒ–ãƒ­ãƒƒã‚¯ã®ä¸­ã§ã‚°ãƒ©ãƒ•ã®å½¢çŠ¶ã‚„ãƒ‡ã‚¶ã‚¤ãƒ³ã®å¤‰æ›´ã‚’è¡Œã†
+      // tryƒuƒƒbƒN‚Ì’†‚ÅƒOƒ‰ƒt‚ÌŒ`ó‚âƒfƒUƒCƒ“‚Ì•ÏX‚ğs‚¤
 
-      // ãƒãƒ¼ãƒ‰è¿½åŠ 	
+      // ƒm[ƒh’Ç‰Á	
       // const v1 = graph.insertVertex(parent, null, '1', null, null, 30, 30, 'shape=cylinder')
       // const v2 = graph.insertVertex(parent, null, '2', null, null, 30, 30, 'shape=triangle')
       // const v3 = graph.insertVertex(parent, null, '3', null, null, 30, 30, 'shape=cloud')
@@ -40,7 +40,7 @@
       // const v8 = graph.insertVertex(parent, null, '8', null, null, 30, 30, 'shape=rhombus')
       // const v9 = graph.insertVertex(parent, null, '9', null, null, 30, 30, 'fillColor=orange')
 
-      // // styleã«åå‰ã‚’ã¤ã‘ã‚‹ã“ã¨ã‚‚ã§ãã‚‹
+      // // style‚É–¼‘O‚ğ‚Â‚¯‚é‚±‚Æ‚à‚Å‚«‚é
       // const defaultNodeStyle = graph.getStylesheet().getDefaultVertexStyle()
       // const style = mxUtils.clone(defaultNodeStyle)
       // style['shape'] = 'actor'
@@ -49,8 +49,9 @@
 
       // const v11 = graph.insertVertex(parent, null, '11', null, null, 30, 30, null)
       // const v12 = graph.insertVertex(parent, null, '12', null, null, 30, 30, null)
+      /*@nodes@*/
 
-      // ã‚¨ãƒƒã‚¸è¿½åŠ 
+      // ƒGƒbƒW’Ç‰Á
       // graph.insertEdge(parent, null, null, v1, v3, null)
       // graph.insertEdge(parent, null, null, v1, v2, null)
       // graph.insertEdge(parent, null, null, v2, v4, null)
@@ -63,7 +64,8 @@
       // graph.insertEdge(parent, null, null, v4, v11, null)
       // graph.insertEdge(parent, null, null, v5, v12, null)
       // graph.insertEdge(parent, null, null, v3, v4, null)
-      // è¿½åŠ ã—ãŸãƒãƒ¼ãƒ‰ãƒ»ã‚¨ãƒƒã‚¸ã«åŸºã¥ã„ã¦ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®è‡ªå‹•è¨ˆç®—ã‚’è¡Œã†
+      /*@edges@*/
+      // ’Ç‰Á‚µ‚½ƒm[ƒhEƒGƒbƒW‚ÉŠî‚Ã‚¢‚ÄƒŒƒCƒAƒEƒg‚Ì©“®ŒvZ‚ğs‚¤
       layout.execute(parent)
     } finally {
       graph.getModel().endUpdate()

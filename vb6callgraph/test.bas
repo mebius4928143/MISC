@@ -103,6 +103,7 @@ Private Function UpdateLogic() As Boolean
         TelephoneNumberTextBox.Text)
     
     UpdateLogic = True
+	Call SubPublic
 End Function
 
 '********************************************************

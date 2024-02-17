@@ -21,7 +21,7 @@
     // グラフにノードやエッジを追加する際に必要
     const parent = graph.getDefaultParent()
     // 今回は階層グラフを自動レイアウトで描画したいため、レイアウトのインスタンスを生成
-    const layout = new mxHierarchicalLayout(graph)
+    const layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
 
     // グラフの形状やデザインの変更を行う(グラフモデルを変更する)際は
     // beginUpdate -> グラフモデル変更 -> endUpdate の順に行う

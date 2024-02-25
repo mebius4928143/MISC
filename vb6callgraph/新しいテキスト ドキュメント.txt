@@ -1,0 +1,22 @@
+// グラフを表す型を定義
+using Graph = vector<vector<Edge>>;
+
+// 頂点 v を始点とするグラフ探索でサイクル検出したら true を返す
+bool dfs(const Graph &G, int v, vector<bool> &seen,  vector<bool> &finished) {
+    seen[v] = true;    // 行きがけ時に true になる
+    for (const Edge &e : G[v]) {
+        int v2 = (辺 e の行き先の頂点);
+        if (v2 が逆戻りの場合) continue;  // 無向グラフの場合は必要
+
+        // 頂点 v2 がすでに探索済みの場合はスキップ 
+        if (finished[v2]) continue;
+
+        // サイクル検出
+        if (seen[v2] && !finished[v2]) return true;
+
+        // 頂点 v2 を再帰的に探索
+        if (dfs(G, v2, seen, finished)) return true;
+    }
+    finished[v] = true;  // 帰りがけ時に true になる
+    return false;
+}

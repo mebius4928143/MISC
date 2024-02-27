@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -189,6 +190,7 @@ namespace vb6callgraph
         //public string SubFuncCall = @"(?'name'\w[\w\d]+)";
         public string SubFuncCall = @"((?'module'\w[\w\d]+)\.)?(?'method'\w[\w\d]+)";
         public string StmtBlock = @"(^[\s]*)(End (If|While|Loop|Next( [A-z0-9_]+)?|Sub|Function|With))([\s]*$)";
+        public Dictionary<string, bool> seen;
         public GraphMatrix MakerMain(string[] files)
         {
             var commentOut = new Regex(CommentOut);
@@ -279,6 +281,11 @@ namespace vb6callgraph
                 }
             }
             var mdlkeys = children.Keys.ToList();
+            seen = new Dictionary<string, bool>();
+            foreach (string module in mdlkeys)
+            {
+                seen[module] = false;
+            }
             foreach (string module in mdlkeys)
             {
                 var x1 = anz.Values.Where(r => r.ModuleName == module).Select(r => ("*", r.MethodName)).ToList();
@@ -301,7 +308,19 @@ namespace vb6callgraph
         }
         public int GetDepth(VBMethod vBMethod)
         {
-            return vBMethod.Children.Count == 0 ? 0 : vBMethod.Children.Max(a => GetDepth(a) + 1);
+            return vBMethod.Children.Count == 0 ? 0 : vBMethod.Children.Max(a => { return chkSeen(a) ? GetDepth(a) + 1 : 0; });
+        }
+        private bool chkSeen(VBMethod a)
+        {
+            if (!seen[a.GeyKey()])
+            {
+                seen[a.GeyKey()] = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public int GetCeil(VBMethod vBMethod)
         {

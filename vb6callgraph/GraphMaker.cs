@@ -280,12 +280,13 @@ namespace vb6callgraph
                     lineno++;
                 }
             }
+            //var methods = anz.Values.ToList();
             var mdlkeys = children.Keys.ToList();
-            seen = new Dictionary<string, bool>();
-            foreach (string module in mdlkeys)
-            {
-                seen[module] = false;
-            }
+            //seen = new Dictionary<string, bool>();
+            //foreach (VBMethod v in methods)
+            //{
+            //    seen[v.GeyKey()] = false;
+            //}
             foreach (string module in mdlkeys)
             {
                 var x1 = anz.Values.Where(r => r.ModuleName == module).Select(r => ("*", r.MethodName)).ToList();
@@ -303,29 +304,29 @@ namespace vb6callgraph
                 }
             }
             matrix.Positions = anz.Values.Select((a, i) => new Position() { VBMethodObject = a, index = i }).ToList();
-            matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Parents.Count == 0 ? 0 : p.VBMethodObject.Parents.Max(a => GetCeil(a) + 1));
+            //matrix.Positions.ToList().ForEach(p => p.x = p.VBMethodObject.Parents.Count == 0 ? 0 : p.VBMethodObject.Parents.Max(a => { return chkSeen(a) ? GetCeil(a) + 1 : 0; }));
             return matrix;
         }
-        public int GetDepth(VBMethod vBMethod)
-        {
-            return vBMethod.Children.Count == 0 ? 0 : vBMethod.Children.Max(a => { return chkSeen(a) ? GetDepth(a) + 1 : 0; });
-        }
-        private bool chkSeen(VBMethod a)
-        {
-            if (!seen[a.GeyKey()])
-            {
-                seen[a.GeyKey()] = true;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public int GetCeil(VBMethod vBMethod)
-        {
-            Debug.Print(vBMethod.ToString());
-            return vBMethod.Parents.Count == 0 ? 0 : vBMethod.Parents.Max(a => GetCeil(a) + 1);
-        }
+        //public int GetDepth(VBMethod vBMethod)
+        //{
+        //    return vBMethod.Children.Count == 0 ? 0 : vBMethod.Children.Max(a => { return chkSeen(a) ? GetDepth(a) + 1 : 0; });
+        //}
+        //private bool chkSeen(VBMethod a)
+        //{
+        //    if (!seen[a.GeyKey()])
+        //    {
+        //        seen[a.GeyKey()] = true;
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
+        //public int GetCeil(VBMethod vBMethod)
+        //{
+        //    Debug.Print(vBMethod.ToString());
+        //    return vBMethod.Parents.Count == 0 ? 0 : vBMethod.Parents.Max(a => { return chkSeen(a) ? GetCeil(a) + 1 : 0; });
+        //}
     }
 }

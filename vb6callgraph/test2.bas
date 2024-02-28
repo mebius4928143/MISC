@@ -26,5 +26,6 @@ End Sub
 Public Sub SubPublic()
     CodeTextBox.Text = ""
     Call Form_Load2
+    Call test2.SubPublic
 End Sub
 

@@ -60,5 +60,21 @@ namespace vb6callgraph
                 File.WriteAllLines("modlenet.html", html);
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                InitialDirectory = Environment.CurrentDirectory,
+                Filter = "*.cs|*.cs"
+            };
+            var res = dlg.ShowDialog();
+            if (res == DialogResult.OK)
+            {
+                var file = dlg.FileName;
+                var sa = new SyntaxAnalysys();
+                sa.stxTree(file);
+            }
+        }
     }
 }

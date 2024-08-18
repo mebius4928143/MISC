@@ -76,5 +76,21 @@ namespace vb6callgraph
                 sa.stxTree(file);
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                Multiselect = true,
+                InitialDirectory = Environment.CurrentDirectory,
+                Filter = "*.cs|*.cs"
+            };
+            var res = dlg.ShowDialog();
+            if (res == DialogResult.OK)
+            {
+                var files = dlg.FileNames;
+                ClassChecker.runProc(files);
+            }
+        }
     }
 }

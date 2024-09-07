@@ -87,6 +87,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Class2.cs" />
+    <Compile Include="ClassChecker2.cs" />
     <Compile Include="ConvertSqlToLinq.cs" />
     <Compile Include="SyntaxAnalysys.cs" />
     <Compile Include="ClassChecker.cs" />
@@ -129,10 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\modulenet.html" />
-    <Content Include="TextTemplate1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TextTemplate1.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -98,6 +99,34 @@ namespace vb6callgraph
         {
             var linq = ConvertSqlToLinq.DoConvertionSqlToLinq("select * from T", new List<T>());
             Debug.WriteLine(linq);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                InitialDirectory = Environment.CurrentDirectory,
+                Filter = "*.dll|*.dll"
+            };
+            var res = dlg.ShowDialog();
+            if (res == DialogResult.OK)
+            {
+                var file = dlg.FileName;
+                ClassChecker2.runProc(file, new string[] { "AAA", "BBB" });
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            dynamic a = null;
+            a = new TestClass1();
+            var t = a.GetType();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            var x = new LinqGen();
+            LinqGen.LinqMain("ProductName", "Price", "Category", "Manufacturer");
         }
     }
 }

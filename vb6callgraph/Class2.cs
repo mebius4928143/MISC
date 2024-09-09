@@ -91,7 +91,6 @@ namespace vb6callgraph
                 var productProperty = Expression.Property(Expression.Property(Expression.Convert(parameter, query.First().GetType()), "product"), field);
                 var lambda = Expression.Lambda<Func<dynamic, object>>(Expression.Convert(productProperty, typeof(object)), parameter);
 //#else
-                var propertyInfo = typeof(Product).GetProperty(field);
                 var parameter2 = Expression.Parameter(typeof(object), "x");
                 var productProperty2 = Expression.Property(Expression.Property(Expression.Convert(parameter2, query.GetType().GenericTypeArguments[0]), "product"), field);
                 var lambda2 = Expression.Lambda<Func<dynamic, object>>(Expression.Convert(productProperty2, typeof(object)), parameter2);
